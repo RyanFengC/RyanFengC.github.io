@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>範圍隨機取號</title>
+    <style>
+        input{height: 10 px;width:100px; border-radius: 5px; font-size: 18px; display: inline-block;}
+        button{background-color: azure;border-radius:5px; font-weight: bold;font-size: 18px;border: 1px black solid;}
+        div{font-weight: bold; font-size: 18px;text-align: center;}
+    </style>
+    <script>
+        function getRandom(){
+            max=document.getElementById("maxvalue")
+            min=document.getElementById("minvalue")
+            result=document.getElementById("result")
+            result.innerHTML=Math.floor(Math.random()*(max.value-min.value+parseInt(1))+min.value)
+            //alert(Math.floor(Math.random()*(max.value-min.value+parseInt(1))+min.value))
+        };
+    </script>
+</head>
+<body>
+    <h1 style="text-align: center;font-weight: bold; font-size: 24px;">範圍隨機取號:</h1>
+    <h3 style="text-align: center;font-weight: bold; font-size: 24px;">
+        輸入最大及最小值，按下產生鈕即可產生出在此範圍內的隨機數字
+    </h3>
+    <div>最大值<input id="maxvalue" type="text" value="0">
+        最小值<input id="minvalue" type="text" value="0">
+        <button onclick="getRandom()">產生</button>
+    </div>
+    <br>
+    <div>
+        結果: <span id="result"></span>
+    </div>
+    
+</body>
+</html>

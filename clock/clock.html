@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>計時器</title>
+    <script>
+        var timer
+        var start_time
+        var stop_time=0
+        var total_time=0
+        function init() {
+            day_timer=document.getElementById("day_timer")
+            timer_1=document.getElementById("timer_1")
+            hour_timer=document.getElementById("hour_timer")
+            timer_2=document.getElementById("timer_2")
+            min_timer_0=document.getElementById("min_timer_0")
+            min_timer_1=document.getElementById("min_timer_1")
+            sec_timer_0=document.getElementById("sec_timer_0")
+            sec_timer_1=document.getElementById("sec_timer_1")
+            misec_timer=document.getElementById("misec_timer")
+            day_timer.style.visibility = "hidden";
+            hour_timer.style.visibility = "hidden";
+            timer_1.style.visibility = "hidden";
+            timer_2.style.visibility = "hidden";
+            
+
+            
+        }
+        function start(event){
+            start_time = Date.now()
+            document.getElementById("btn").disabled=true//將 開始計時的按鈕停用 以防止使用者多次點擊，多次執行start()函式，造成讀秒錯誤
+            //setInterval(function,time)每隔time 時間就執行一次function
+            time_count=window.setInterval(count,10)//1000代表1秒
+
+        }
+        var day=0,hour=0,min=0,sec=0.0
+
+        function timer_calculator(timestamp,start_time,total_time){
+            current_time=timestamp
+                time_calcu=((total_time+current_time-start_time)/1000)
+                if(time_calcu>86400){
+                    day=Math.floor(time_calcu/86400)
+                    day_mod=parseFloat((time_calcu % 86400).toFixed(2))
+                    hour=Math.floor(day_mod/3600)
+                    hour_mod=parseFloat((day_mod % 3600).toFixed(2))
+                    min=Math.floor(hour_mod/60).toString()
+                    sec=parseFloat((hour_mod % 60).toFixed(2)).toString()
+                    //result=day+":"+hour+":"+min +":"+sec 
+                    day_timer.style.visibility = "visible";
+                    timer_1.style.visibility = "visible";
+                }
+                else if(86400>time_calcu && time_calcu>3600){
+                    hour=Math.floor(time_calcu/3600).toString()
+                    hour_mod=parseFloat((time_calcu % 3600).toFixed(2))
+                    min=Math.floor(hour_mod/60).toString()
+                    sec=parseFloat((hour_mod % 60).toFixed(2)).toString()
+                    //result=hour+":"+min +":"+sec 
+                    hour_timer.style.visibility = "visible";
+                    timer_2.style.visibility = "visible";
+                    
+                }
+                else if(3600>time_calcu && time_calcu>60){
+                    min=Math.floor(time_calcu/60).toString()
+                    sec=parseFloat((time_calcu % 60).toFixed(2)).toString()
+                    //result=min +":"+sec 
+                }else{
+                    //result=parseFloat(time_calcu.toFixed(2)).toString()
+                    sec=parseFloat(time_calcu.toFixed(2)).toString()
+                }
+             
+                //console.log(sec)
+                //console.log(min)
+            if (sec % 1 !==0){
+                var misec = (sec.split(".")[1])
+                //milsec=milsec.toString();
+                sec=sec.split(".")[0]
+                //console.log(result_decimal.length)
+                //console.log(sec) 
+                if (misec.length == 1) {
+                    misec = misec + "0";
+                }
+            }else{
+                misec='00'
+            }
+
+            return([sec,time_calcu*1000,min,hour,day,misec])
+        }
+        function count(){
+
+                calculate_result=timer_calculator(Date.now(),start_time,total_time)
+                //console.log(calculate_result[2])
+                if (calculate_result[0].toString().length==1){
+                    sec_timer_1.innerHTML='0'
+                    sec_timer_0.innerHTML=calculate_result[0]
+                }else{
+                    //console.log(calculate_result[2].length)
+                    sec_timer_1.innerHTML=calculate_result[0].substring(0,1)//10位數
+                    sec_timer_0.innerHTML=calculate_result[0].substring(1)//個位數
+                }
+                //console.log(calculate_result[2].toString().length)
+                if (calculate_result[2].toString().length==1){
+                    min_timer_1.innerHTML='0'
+                    min_timer_0.innerHTML=calculate_result[2]
+                }else{
+                    //console.log(calculate_result[0])
+                    min_timer_1.innerHTML=calculate_result[2].substring(0,1)//10位數
+                    min_timer_0.innerHTML=calculate_result[2].substring(1)//個位數
+                }
+                
+                hour_timer.innerHTML=calculate_result[3]
+                day_timer.innerHTML=calculate_result[4]
+                misec_timer.innerHTML=calculate_result[5]
+                
+
+            //timer.innerHTML=parseFloat(timer.innerHTML)+1 //parseFloat()將字串轉數字，因為innerHTML取出之格式為字串
+            
+        }
+        function stop_timer(){
+            calculate_result=timer_calculator(Date.now(),start_time,total_time)
+            total_time=calculate_result[1]
+            window.clearInterval(time_count) //清除setInterval中的定時操作，但括號內必須要是setInterval的回傳值
+            document.getElementById("btn").disabled=false
+            
+        }
+        function reset(){
+            total_time=0
+            stop_time=0
+            day=0
+            hour=0
+            min=0
+            sec=0.0
+            misec_timer.innerHTML=0
+            sec_timer_1.innerHTML=0
+            sec_timer_0.innerHTML=0
+            min_timer_1.innerHTML=0
+            min_timer_0.innerHTML=0
+            hour_timer.innerHTML=0
+            day_timer.innerHTML=0
+            window.clearInterval(time_count) //清除setInterval中的定時操作，但括號內必須要是setInterval的回傳值
+            document.getElementById("btn").disabled=false
+        }
+    </script>
+    <style>
+        .clock_style{
+            margin:0 auto;
+            text-align: center; 
+            background-color: black;
+            color: blanchedalmond;
+        }
+        .bigger_time{
+            font-size: 60px;
+        }
+        span{
+            display:inline-block;
+            position: relative;
+            right:50px;
+            width: 30px;
+        }
+        @media screen and (max-width:600px){
+	    }
+        .content{width:100%;text-align:center;}
+        button{background-color: wheat;}
+    </style>
+
+</head>
+<body onload="init()">
+    <div class="clock_style">
+        <h1>計時器</h1>
+         <div>
+            <button id="btn" onclick="start(event)">開始計時</button>
+            <button onclick="stop_timer()">停止計時</button>
+            <button onclick="reset()">歸零</button>
+         </div>
+        <div>
+            <span id="day_timer" class="bigger_time">0</span>
+            <span id="timer_1" class="bigger_time">:</span>
+            <span id="hour_timer" class="bigger_time">0</span>
+            <span id="timer_2" class="bigger_time">:</span>
+            <span id="min_timer_1" class="bigger_time">0</span>
+            <span id="min_timer_0" class="bigger_time">0</span>
+            <span class="bigger_time" style="display:inline;">:</span>
+            <span id="sec_timer_1" class="bigger_time">0</span>
+            <span id="sec_timer_0" class="bigger_time">0</span>
+            <span style="font-size: small;display:inline;">.</span>
+            <span id="misec_timer" style="font-size: small; width: 20px;">00</span>
+        </div>
+    </div>
+</body>
+</html>

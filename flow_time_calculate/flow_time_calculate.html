@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注滿時間計算</title>
+    <script>
+
+        function calculate(){
+            if(document.getElementById("accuracuy_flow").checked==true){
+                var exp_volume = document.getElementById("exp_volume").value
+                var exp_time = document.getElementById("exp_time").value
+            }else{
+                exp_volume = 5000
+                exp_time = 60
+            }
+            var obj_volume = document.getElementById("obj_volume").value
+            var result = document.getElementById("result")
+            result.innerHTML = (obj_volume*1000/(exp_volume/exp_time)/60).toFixed(2)
+
+        }
+        function accuracuy_flow(){
+            try{
+                var del_content =document.getElementById("container")
+                del_content.parentNode.removeChild(del_content);
+            }catch{}
+
+           var rough_flow=document.getElementById("rough_flow")
+           rough_flow.checked = false
+
+
+            //document.getElementById("content").parentNode.removeChild();
+            const div = document.createElement("div")
+            div.id="container"
+
+            const p = document.createElement("p")
+            p.innerHTML="註:量測水流流量方法:先使用已知容量大小的寶特瓶，\
+            打開水龍頭並固定水流大小，水流注入寶特瓶的同時開始計時，\
+            寶特瓶注滿後停止計時，即可使用本網頁之工具。"
+            
+            const label_volume = document.createElement("label")
+            label_volume.innerHTML="測試流量寶特瓶容量(mL)"
+
+            const input_volume = document.createElement("input")
+            input_volume.type="number"
+            input_volume.id="exp_volume"
+
+            var br = document.createElement("br")
+
+            const label_time = document.createElement("label")
+            label_time.innerHTML="寶特瓶注滿水所需時間(s)"
+
+            const input_time = document.createElement("input")
+            input_time.type="number"
+            input_time.id="exp_time"
+
+            document.getElementById("content1").appendChild(div)
+            document.getElementById("container").appendChild(p)
+            document.getElementById("container").appendChild(label_volume)
+            document.getElementById("container").appendChild(input_volume)
+            document.getElementById("container").appendChild(br)
+            document.getElementById("container").appendChild(label_time)
+            document.getElementById("container").appendChild(input_time)
+
+        }
+        function rough_flow(){
+            try{
+                var del_content =document.getElementById("container")
+                del_content.parentNode.removeChild(del_content);
+            }catch{}
+           var accuracuy_flow=document.getElementById("accuracuy_flow")
+           accuracuy_flow.checked = false
+
+           const div = document.createElement("div")
+            div.id="container"
+
+            const p = document.createElement("p")
+            p.innerHTML="註:一般水龍頭出水量約為每分鐘5公升。"
+            document.getElementById("content1").appendChild(div)
+            document.getElementById("container").appendChild(p)
+
+
+        }
+
+    </script>
+</head>
+<body>
+    <h1>注滿時間計算</h1>
+    <div>
+        <label for="">精確算法</label>
+        <input type="checkbox" id="accuracuy_flow" onclick="accuracuy_flow()">
+        <br>
+        <label for="">概算算法</label>
+        <input type="checkbox" id="rough_flow" onclick="rough_flow()">
+    </div>
+    <div id="content1">
+
+    </div>
+    <div>
+        <label>目標計算注滿水所需時間容器容量(L)</label>
+        <input type="number" id="obj_volume">
+    </div>
+    <div>
+        <button onclick="calculate()">計算</button>
+    </div>
+    <div>
+        <label>容量注滿水所需時間(min)</label>
+        <span id="result"></span>
+    </div>
+
+</body>
+</html>

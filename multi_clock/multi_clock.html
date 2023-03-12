@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多工計時器</title>
+    <script>
+        var count_number= 0;
+
+        //..............計算時間函數.....................................
+        function timer_calculator(timestamp,s_time,total_time){
+            current_time=timestamp
+            //console.log(total_time)
+            //console.log(current_time)
+            //console.log(s_time)
+                time_calcu=((total_time+current_time-s_time)/1000)
+                //console.log(time_calcu)
+                if(time_calcu>86400){
+                    day=Math.floor(time_calcu/86400)
+                    day_mod=parseFloat((time_calcu % 86400).toFixed(2))
+                    hour=Math.floor(day_mod/3600)
+                    hour_mod=parseFloat((day_mod % 3600).toFixed(2))
+                    min=Math.floor(hour_mod/60).toString()
+                    sec=parseFloat((hour_mod % 60).toFixed(2)).toString()
+                    //result=day+":"+hour+":"+min +":"+sec 
+                    //day_timer.style.visibility = "visible";
+                   // timer_1.style.visibility = "visible";
+                }
+                else if(86400>time_calcu && time_calcu>3600){
+                    day=0
+                    hour=Math.floor(time_calcu/3600).toString()
+                    hour_mod=parseFloat((time_calcu % 3600).toFixed(2))
+                    min=Math.floor(hour_mod/60).toString()
+                    sec=parseFloat((hour_mod % 60).toFixed(2)).toString()
+                    //result=hour+":"+min +":"+sec 
+                    //hour_timer.style.visibility = "visible";
+                    //timer_2.style.visibility = "visible";
+                    
+                }
+                else if(3600>time_calcu && time_calcu>60){
+                    day=0
+                    hour=0
+                    min=Math.floor(time_calcu/60).toString()
+                    sec=parseFloat((time_calcu % 60).toFixed(2)).toString()
+                    //result=min +":"+sec 
+                }else{
+                    //result=parseFloat(time_calcu.toFixed(2)).toString()
+                    day=0
+                    hour=0
+                    min=0
+                    sec=parseFloat(time_calcu.toFixed(2)).toString()
+                }
+             
+
+            if (sec % 1 !==0){
+                var misec = (sec.split(".")[1])
+                //milsec=milsec.toString();
+                sec=sec.split(".")[0]
+                //console.log(result_decimal.length)
+                //console.log(sec) 
+                if (misec.length == 1) {
+                    misec = misec + "0";
+                }
+            }else{
+                misec='00'
+            }
+
+            return([sec,time_calcu*1000,min,hour,day,misec])
+        }
+
+
+//依據計算函數之結果分別填入HTML
+        function count(id_number){
+
+            calculate_result=timer_calculator(Date.now(),window["start_time"+id_number],window["total_time"+id_number])
+            //console.log(calculate_result[2])
+            if (calculate_result[0].toString().length==1){
+                document.getElementById("sec_timer_ten"+id_number).innerHTML='0'
+                document.getElementById("sec_timer_digit"+id_number).innerHTML=calculate_result[0]
+            }else{
+                //console.log(calculate_result[2].length)
+                document.getElementById("sec_timer_ten"+id_number).innerHTML=calculate_result[0].substring(0,1)//10位數
+                document.getElementById("sec_timer_digit"+id_number).innerHTML=calculate_result[0].substring(1)//個位數
+            }
+            //console.log(calculate_result[2].toString().length)
+            if (calculate_result[2].toString().length==1){
+                document.getElementById("min_timer_ten"+id_number).innerHTML='0'
+                document.getElementById("min_timer_digit"+id_number).innerHTML=calculate_result[2]
+            }else{
+                //console.log(calculate_result[0])
+                document.getElementById("min_timer_ten"+id_number).innerHTML=calculate_result[2].substring(0,1)//10位數
+                document.getElementById("min_timer_digit"+id_number).innerHTML=calculate_result[2].substring(1)//個位數
+            }
+
+            document.getElementById("hour_timer"+id_number).innerHTML=calculate_result[3]
+            document.getElementById("misec_timer"+id_number).innerHTML=calculate_result[5]
+
+            workname=document.getElementById("h4"+id_number).innerHTML
+            testcookie={"name" : workname,"time" : calculate_result[1]}
+            setCookie("total_time"+id_number,JSON.stringify(testcookie),1)
+
+            //setCookie("total_time"+id_number,calculate_result[1],1)
+
+            //timer.innerHTML=parseFloat(timer.innerHTML)+1 //parseFloat()將字串轉數字，因為innerHTML取出之格式為字串
+        }
+
+        function start(obj){
+            number=obj.id.substr(9)
+
+            //window.window["timer"+number]
+
+           // window.window["start_time"+number]
+            window["start_time"+number] = Date.now()
+            if(window["stop_clicked"+number]!=0){
+
+                window["stop_time"+number]=0.0
+                window["total_time"+number]=0.0
+
+            }
+            
+            obj.disabled=true//將 開始計時的按鈕停用 以防止使用者多次點擊，多次執行start()函式，造成讀秒錯誤
+            //setInterval(function,time)每隔time 時間就執行一次function
+            
+            window["time_count"+number]=setInterval(count,10,number)//1000代表1秒
+            //window.window["time_count"+number]=window.setInterval(function(){test(number)},1000)//1000代表1秒
+            document.getElementById("stop_btn"+number).disabled=false
+        }
+
+        function stop_timer(obj){
+            number=obj.id.substr(8)
+            calculate_result=timer_calculator(Date.now(),window["start_time"+number],window["total_time"+number])
+            window["total_time"+number]=calculate_result[1]
+            
+            window.clearInterval(window["time_count"+number]) //清除setInterval中的定時操作，但括號內必須要是setInterval的回傳值
+            
+            document.getElementById("start_btn"+number).disabled=false
+            document.getElementById("stop_btn"+number).disabled=true
+            window["stop_clicked"+number]=0
+            //cookieArray=document.cookie.split(";")
+            //console.log(cookieArray)
+            //console.log(result.split("=")[1])
+            //setCookie("total_time"+number,calculate_result[1],1)
+
+            //cookieArray=document.cookie.split(";")
+            //console.log(cookieArray)
+            //console.log(JSON.parse(cookieArray))
+        }
+
+        function reset(obj){
+            number=obj.id.substr(9)
+            window["total_time"+number]=0
+            window["stop_time"+number]=0
+
+            window["stop_clicked"+number]=-1
+            document.getElementById("misec_timer"+number).innerHTML=0
+            document.getElementById("sec_timer_ten"+number).innerHTML=0
+            document.getElementById("sec_timer_digit"+number).innerHTML=0
+            document.getElementById("min_timer_ten"+number).innerHTML=0
+            document.getElementById("min_timer_digit"+number).innerHTML=0
+            document.getElementById("hour_timer"+number).innerHTML=0
+            //day_timer.innerHTML=0
+           window.clearInterval(window["time_count"+number]) //清除setInterval中的定時操作，但括號內必須要是setInterval的回傳值
+           document.getElementById("start_btn"+number).disabled=false
+           document.cookie = "total_time"+number+"="+"; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+        }
+        function add_time_element(id_name,HTML_name,class_name){
+
+            var elem=document.createElement("span")
+            elem.id=id_name
+            elem.innerHTML=HTML_name
+            elem.className=class_name
+            return elem
+        }
+
+        function del(obj){
+            number=obj.id.substr(7)
+
+            var yes = confirm('你確定刪除嗎？');
+            if (yes) {
+                if ( document.getElementById("stop_btn"+number).disabled==true){
+                    var list=document.getElementById("div_container"+number);
+                    list.parentNode.removeChild(list);
+                    document.cookie = "total_time"+number+"="+"; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                }else{
+                    alert('請先停止計時後再刪除')
+                }
+
+            } else {
+                alert('取消刪除');
+            }
+
+
+        }
+
+        function setCookie(cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays*24*60*60*1000*30));
+            let expires = "expires="+ d.toUTCString();
+            //document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+            document.cookie = cname + "=" + cvalue + ";"     + ";path=/";
+        }
+        
+        function onload_cookie(){
+            //setCookie("test",100000,1)
+            //setCookie("super",20020,1)
+            cookieArray=document.cookie.split(";")
+            history_count_number=0;
+            for(var i=0;i<cookieArray.length;i++){
+
+                if(cookieArray[i].replace(" ","").substr(0,10)=='total_time'){
+                    number_Array = cookieArray[i].replace(" ","").substr(10)
+                    var yes = confirm('是否要讀取前次紀錄？\n'+
+                                        '前次紀錄資訊:\n'+
+                                        '名稱:'+JSON.parse(cookieArray[i].split("=")[1])["name"]+'\n'+
+                                        '紀錄時間:'+parseInt(JSON.parse(cookieArray[i].split("=")[1])["time"])/1000+'秒');
+                    if (yes) {
+                        //cookieArray[i].split("=")[1]
+                        history_number= number_Array.split("=")[0]
+                        history_name = JSON.parse(cookieArray[i].split("=")[1])["name"]
+                        input_text=document.getElementById("input_text")
+                        input_text.value=history_name
+                        
+                        window["start_time"+history_count_number]=Date.now()
+                        window["total_time"+history_count_number]=parseInt(JSON.parse(cookieArray[i].split("=")[1])["time"])
+                        add()
+                        count(history_count_number)
+                        window["stop_clicked"+history_count_number]=0
+                        input_text.value=""
+                        //將舊有cookie刪除，並建立新編號之cookie
+                        document.cookie = "total_time"+history_number+"="+"; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                        //workname=document.getElementById("h4"+id_number).innerHTML
+                        testcookie={"name" : history_name,"time" : parseInt(JSON.parse(cookieArray[i].split("=")[1])["time"])}
+                        setCookie("total_time"+history_count_number,JSON.stringify(testcookie),1)
+                        //setCookie("total_time"+history_count_number,parseInt(cookieArray[i].split("=")[1]),1)
+                        history_count_number++
+                    } else {
+                        document.cookie = cookieArray[i].replace(" ","").substr(0,11)+"="+"; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                        alert('前次紀錄已刪除');
+                    }
+
+                }
+            }
+
+            //console.log(cookieArray[0].split("=")[])
+        }
+
+        function add(){
+            //
+            input_text=document.getElementById("input_text")
+            if(input_text.value==""){
+                alert("請輸入計時器名稱")
+            }else{
+                var h4 = document.createElement("h4")
+                h4.id="h4"+count_number
+                h4.innerHTML=input_text.value  //+":"
+
+                var container =document.getElementById("container")
+
+                var start_button=document.createElement("button")
+                start_button.innerHTML="開始計時"
+                start_button.id="start_btn"+count_number
+                start_button.onclick = new Function("start(this)");
+
+
+                var stop_button=document.createElement("button")
+                stop_button.id="stop_btn"+count_number
+                stop_button.innerHTML="停止計時"
+                stop_button.disabled=true
+                stop_button.onclick = new Function("stop_timer(this)");
+
+                var reset_button=document.createElement("button")
+                reset_button.id="reset_btn"+count_number
+                reset_button.innerHTML="歸零"
+                reset_button.onclick = new Function("reset(this)");
+
+                var del_button=document.createElement("button")
+                del_button.id="del_btn"+count_number
+                del_button.innerHTML="刪除"
+                del_button.onclick = new Function("del(this)");
+
+                //............................................................           
+                //<br>
+                var br = document.createElement("br")
+                //<div>
+                var div_container = document.createElement("div")
+
+                var div = document.createElement("div")
+                div_container.id="div_container"+count_number
+                //add to container
+                container.appendChild(div_container);
+                div_container.appendChild(h4);
+                div_container.appendChild(start_button);
+                div_container.appendChild(stop_button);
+                div_container.appendChild(reset_button);
+                div_container.appendChild(del_button);            
+                div_container.appendChild(div);
+                //建立時間顯示
+
+                div_container.appendChild(add_time_element("hour_timer"+count_number,0,"bigger"));
+                div_container.appendChild(add_time_element("colon_hour"+count_number,":","bigger"));//新增時間小時:分鐘
+                div_container.appendChild(add_time_element("min_timer_ten"+count_number,0,"bigger"));//新增時間分鐘十位數
+                div_container.appendChild(add_time_element("min_timer_digit"+count_number,0,"bigger"));//新增時間分鐘個位數
+                div_container.appendChild(add_time_element("colon_min"+count_number,":","bigger"));//新增時間分鐘:秒
+                div_container.appendChild(add_time_element("sec_timer_ten"+count_number,0,"bigger"));//新增時間秒十位數
+                div_container.appendChild(add_time_element("sec_timer_digit"+count_number,0,"bigger"));//新增時間秒個位數
+                div_container.appendChild(add_time_element("misec_dot"+count_number,".","inline_style"));//新增時間秒之小數點
+                div_container.appendChild(add_time_element("misec_timer"+count_number,"00","mini"));//新增時間微秒
+                div_container.appendChild(br);
+
+                count_number++;
+            }
+
+        }
+    </script>
+    <style>
+        .bigger{ 
+            font-size: 60px;
+        }
+        /*
+        span{
+            display:inline-block;
+            position: relative;
+            right:50px;
+            width: 30px;
+        }
+        */
+        button{
+            border: 1px black solid;
+            background-color: wheat;
+        }
+        input{
+            width: 200px; 
+            height: 30px; 
+            border-radius: 5px; 
+            border: 2px solid black;
+            display:inline-block;
+        }
+    </style>
+</head>
+<body onload="onload_cookie()">
+    <h2>計時器</h2>
+    <div id="container"></div>
+    <h3>請輸入計時器名稱</h3>
+    <input type="text" id="input_text">
+    <button onclick="add()">ADD</button>
+</body>
+</html>

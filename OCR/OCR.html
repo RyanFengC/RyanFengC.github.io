@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR圖片文字辨識</title>
+    <style>
+        button{border: 1pt black solid;background-color: azure;border-radius: 5pt; font-size: 14pt;}
+        select{border: 1pt black solid;background-color: azure;border-radius: 5pt; font-size: 14pt;text-align: center;}
+        div{text-align: center; border-radius: 5pt;}
+        input{border-radius: 5pt; font-size: 12pt;text-align: center;}
+        .effect{
+            animation: blink 1s infinite;/*一秒 持續不中斷*/
+        }
+        /*定義 blink動畫  50% 表示動畫的一半透明度變為1 */
+        @keyframes blink{
+            0%{opacity:0}
+            50%{opacity:1}
+            100%{opacity:0}
+        }
+    </style>
+    
+</head>
+<body>
+    <h2>影像轉文字(OCR)</h2>
+    <h3>
+        使用tesseract.js
+    </h3>
+    <h3>程式使用方法:
+        1.上傳欲辨識的影像檔
+        2.選擇欲辨識語言
+        3.按開始辨識後
+        4.辨識完成
+    </h3>
+    <div>
+        <img id="InputImage" alt="No Image" />
+        <br>
+        <input type="file" id="photoInput" name="file" accept="image">
+    </div>
+    <div>
+        <h2>語言選擇</h2>
+        <select name="" id="language">
+            <option value="chi_tra">中文</option>
+            <option value="eng">Enginsh</option>
+        </select>
+    </div>
+    <br>
+    <div>
+        <button id="recognize_btn"disabled=true onclick="recognize_result()">辨識開始</button>
+    </div>
+    <h1>辨識結果:</h1>
+    <div style="border: 1pt solid black;">
+        <br>
+        <span id="result_text" style="visibility:hidden">辨識中...</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/dist/tesseract.min.js"></script>
+    <script>
+        let language=document.getElementById('language');
+        let imgElement = document.getElementById('InputImage');
+        let inputElement = document.getElementById('photoInput');
+        inputElement.addEventListener('change', (e) => {
+        imgElement.src = URL.createObjectURL(e.target.files[0]);
+           document.getElementById('recognize_btn').disabled = false;
+        }, false);
+
+        function recognize_result(){
+            
+            const exampleImage = imgElement.src;
+            document.getElementById('result_text').style.visibility="visible"
+            document.getElementById("result_text").classList.add("effect")
+            const worker = Tesseract.createWorker({
+            logger: m => console.log(m)
+            });
+            Tesseract.setLogging(true);
+            work();
+
+            async function work() {
+            await worker.load();
+            await worker.loadLanguage('eng+chi_tra');
+            await worker.initialize(language.value);
+
+            let result = await worker.detect(exampleImage);
+            console.log(result.data);
+
+            result = await worker.recognize(exampleImage);
+            //console.log(result.data["text"]);
+            document.getElementById("result_text").classList.remove("effect")
+            document.getElementById('result_text').innerHTML=result.data["text"]
+
+            await worker.terminate();
+            }
+
+            
+             
+         }
+
+    </script>
+
+</body>
+</html>

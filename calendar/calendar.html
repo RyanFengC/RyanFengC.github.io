@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日期計算器(Calendar Calculator)</title>
+    <script>
+        function calculate() {
+           var start_date = document.getElementById("start_date")
+           var end_date = document.getElementById("end_date")
+           var result_value = document.getElementById("result")
+           //由於瀏覽器之間的不同與差異，強烈不建議使用 Date.parse(要再修改)
+           start_date_value = Date.parse(start_date.value)//解析字串所表示的時間，回傳由 1970/01/01 00:00:00 (UTC) 到該時間的毫秒數值。
+           end_date_value = Date.parse(end_date.value)
+           diff_day =Math.abs(start_date_value - end_date_value)
+           result_value.style.color="black"
+           result_value.innerHTML = diff_day/(1000*60*60*24)
+           if (isNaN(diff_day)){
+                result_value.style.color="red"
+                alert("Error")
+           }
+           
+        }
+
+        function calculate_difdate() {
+           var specific_date = document.getElementById("specific_date")
+           var differen_date = document.getElementById("differen_date")
+           var result_date_value = document.getElementById("result_date")
+           //由於瀏覽器之間的不同與差異，強烈不建議使用 Date.parse(要再修改)
+           specific_date_value = Date.parse(specific_date.value)//解析字串所表示的時間，回傳由 1970/01/01 00:00:00 (UTC) 到該時間的毫秒數值。
+           //differen_date_value = Date.parse(end_date.value)
+           end_date_value =Math.abs(specific_date_value) + differen_date.value*(1000*60*60*24)
+           var date = new Date(end_date_value);
+           result_date_value.style.color="black"
+           result_date_value.innerHTML= date.toDateString(end_date_value)
+           if (isNaN(specific_date_value)){
+            result_date_value.style.color="red"
+                alert("錯誤(Error)，請輸入日期(Please enter a date) ")
+           }
+           
+           
+        }
+    </script>
+    <style>
+        .calendar_style{
+            text-align: center;
+        }
+        div{
+            padding: 5px;
+        }
+        button{
+            background-color: azure;border: black 2px solid; border-radius: 2px;
+        }
+        @media screen and (max-width:600px){
+		.content{width:100%;text-align:center;}
+        }
+    </style>
+</head>
+<body>
+    <h1 class="calendar_style">日期計算器(Calendar Calculator):
+        <h2 class="calendar_style">能夠計算兩個日期相差幾天，以及日期加減幾天後是什麼時候</h2>
+    </h1>
+    <h3 class="calendar_style">日期相差天數計算</h3>
+    <div class="calendar_style">
+        <div>
+            <span>起始時間(Start Date)</span>
+            <input type="date" id="start_date"></input>
+        </div>
+        <div>
+            <span>結束時間(End Date)</span>
+            <input type="date" id="end_date"></input>
+        </div>
+        <div>
+            <button onclick="calculate()" style="border-radius: 3px;">計算(Calculate)</button>
+        </div>
+        <div class="result_style">
+            相差天數(不含當天)(Different Day): <span id="result" style="font-weight: bold;"></span> 天(Day)
+        </div>
+        
+    </div>
+    <hr>
+    <h3 class="calendar_style">日期加減天數計算</h3>
+    <div class="calendar_style">
+        <div>
+            <span>特定日期(Specific Date)</span>
+            <input type="date" id="specific_date"></input>
+        </div>
+        <div>
+            <span>相差天數(Differen Date)(+，-))</span>
+            <input type="number" id="differen_date"></input>
+        </div>
+        <div>
+            <button onclick="calculate_difdate()" style="border-radius: 3px;">計算(Calculate)</button>
+        </div>
+        <div class="result_style">
+            所得日期(不含當天)(result Day): <span id="result_date" style="font-weight: bold;"></span> 
+        </div>
+        
+    </div>
+</body>
+</html>

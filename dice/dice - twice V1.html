@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>擲骰子</title>
+    <script>
+        var count=0
+        var count_twice=0
+        var interval,number_of_dice
+        var center_position = window.width/2
+        function one(x,y){//畫出骰子1點
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext('2d');
+            ctx.clearRect(x-50,50+y,100,100);//(x,y,width,height)
+            ctx.strokeRect(x-50,50+y,100,100);//畫出正方形外框
+            ctx.fillStyle = 'red'
+            ctx.beginPath();
+            ctx.arc(x, 100+y, 10, 0, 2 * Math.PI);//畫出圓點
+            ctx.fill()
+        }
+        function two(x,y){//畫出骰子2點
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext('2d');
+            ctx.clearRect(x-50,50+y,100,100);
+            ctx.strokeRect(x-50,50+y,100,100);
+            ctx.fillStyle = 'black'
+            ctx.beginPath();
+            ctx.arc(x-25, 75+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+            ctx.beginPath();
+            ctx.arc(25+x, 125+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+        }
+        function three(x,y){//畫出骰子3點
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext('2d');
+            ctx.clearRect(x-50,50+y,100,100);
+            ctx.strokeRect(x-50,50+y,100,100);
+            ctx.fillStyle = 'black'
+            ctx.beginPath();
+            ctx.arc(x-25, 75+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+            ctx.beginPath();
+            ctx.arc(x, 100+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+            ctx.beginPath();
+            ctx.arc(25+x, 125+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+        }
+        function four(x,y){//畫出骰子4點
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext('2d');
+            ctx.clearRect(x-50,50+y,100,100);
+            ctx.strokeRect(x-50,50+y,100,100);
+            ctx.fillStyle = 'red'
+            ctx.beginPath();
+            ctx.arc(x-25, 75+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+            ctx.beginPath();
+            ctx.arc(x-25, 125+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+            ctx.beginPath();
+            ctx.arc(25+x, 75+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+            ctx.beginPath();
+            ctx.arc(25+x, 125+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+        }
+        function five(x,y){//畫出骰子5點
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext('2d');
+            ctx.clearRect(x-50,50+y,100,100);
+            ctx.strokeRect(x-50,50+y,100,100);
+            ctx.fillStyle = 'black'
+            ctx.beginPath();
+            ctx.arc(25+x, 75+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+            ctx.beginPath();
+            ctx.arc(x-25, 75+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+            ctx.beginPath();
+            ctx.arc(x, 100+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+            ctx.beginPath();
+            ctx.arc(x-25, 125+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+            ctx.beginPath();
+            ctx.arc(25+x, 125+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+        }
+
+        function six(x,y){//畫出骰子6點
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext('2d');
+            ctx.clearRect(x-50,50+y,100,100);
+            ctx.strokeRect(x-50,50+y,100,100);
+            ctx.fillStyle = 'black'
+            ctx.beginPath();
+            ctx.arc(x-25, 75+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+            ctx.beginPath();
+            ctx.arc(x-25, 100+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+            ctx.beginPath();
+            ctx.arc(x-25, 125+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+            ctx.beginPath();
+            ctx.arc(25+x, 75+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+            ctx.beginPath();
+            ctx.arc(25+x, 100+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+            ctx.beginPath();
+            ctx.arc(25+x, 125+y, 10, 0, 2 * Math.PI);
+            ctx.fill()
+        }
+
+        function counting(){
+            //判斷是否骰子的動畫從1到6跑了2次
+            if(count_twice<2){
+                if (count<6){
+                    count=count+1;
+                }else{
+                count=1;
+                count_twice=count_twice+1;
+                }
+                //判斷使用者選擇使用幾顆骰子
+                switch(parseInt(number_of_dice.value)){
+                    case 1:
+                        select_dice_number(count,center_position,0)
+                        break;
+                    case 2:
+                        select_dice_number(count,center_position-75,0)
+                        select_dice_number(count,center_position+75,0)
+                        break;
+                    case 3:
+                        select_dice_number(count,center_position,0)
+                        select_dice_number(count,center_position+150,0)
+                        select_dice_number(count,center_position-150,0)
+                        break;
+                }
+                
+            }else{
+                clearInterval(interval); //骰子的動畫從1到6跑了2次後動畫停止
+                document.getElementById("btn").disabled=false
+                switch(parseInt(number_of_dice.value)){
+                    case 1:
+                        dice_number=Math.floor(Math.random()*(6-1+parseInt(1))+1)
+                        select_dice_number(dice_number,center_position,0)
+                        //document.getElementById("dice").innerHTML=dice_number
+                        break;
+                    case 2:
+                        dice_number=Math.floor(Math.random()*(6-1+parseInt(1))+1)
+                        select_dice_number(dice_number,center_position-75,0)
+                        dice_number1=Math.floor(Math.random()*(6-1+parseInt(1))+1)
+                        select_dice_number(dice_number1,center_position+75,0)
+                        //document.getElementById("dice").innerHTML=dice_number+","+dice_number1
+                        break;
+                    case 3:
+                        dice_number=Math.floor(Math.random()*(6-1+parseInt(1))+1)
+                        select_dice_number(dice_number,center_position,0)
+                        dice_number1=Math.floor(Math.random()*(6-1+parseInt(1))+1)
+                        select_dice_number(dice_number1,center_position-150,0)
+                        dice_number2=Math.floor(Math.random()*(6-1+parseInt(1))+1)
+                        select_dice_number(dice_number2,center_position+150,0)
+                        //document.getElementById("dice").innerHTML=dice_number+","+dice_number1+","+dice_number2
+                        break;
+                }
+
+                count_twice=0
+                count=0
+            } 
+        }
+        function select_dice_number(count,x,y){
+            switch(count){
+                    case 1:
+                        one(x,y)
+                        break;
+                    case 2:
+                        two(x,y)
+                        break;
+                    case 3:
+                        three(x,y)
+                        break;
+                    case 4:
+                        four(x,y)
+                        break;
+                    case 5:
+                        five(x,y)
+                        break;
+                    case 6:
+                        six(x,y)
+                        break;
+                }
+        }
+        function dice(){
+            document.getElementById("btn").disabled=true
+            number_of_dice=document.getElementById("number_of_dice")
+            const context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);//清除前次的骰子結果
+            document.getElementById('canvas').width=window.innerWidth
+            center_position = window.innerWidth/2
+            interval = setInterval(counting,100)//每隔time 時間就執行一次function
+            
+            //console.log(center_position)
+            //two(center_position,0)
+
+        }
+    </script>
+    <style>
+        button{border: 1pt black solid; border-radius: 3pt; background-color: azure; font-size: 16;}
+        select{border: 1pt black solid; border-radius: 3pt; background-color: azure; font-size: 16;}
+    </style>
+</head>
+<body>
+    <h3 style="text-align: center;">選擇需要的骰子數量有1到3個，按下擲骰子就會擲出</h3>
+    <canvas id="canvas" width="500" height="200" style="text-align: center;"></canvas>
+    <div style="text-align: center;">
+        <button id="btn" onclick="dice()">擲骰子</button>
+        <select name="" id="number_of_dice">
+            <option value="1">1顆</option>
+            <option value="2">2顆</option>
+            <option value="3">3顆</option>
+        </select>
+    </div>
+</body>
+</html>
