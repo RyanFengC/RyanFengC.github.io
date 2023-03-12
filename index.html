@@ -6,22 +6,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Present</title>
     <style>
-        input{text-align: center; padding-right: 30px;padding-left: 30px;}
+        .title{background-color:#003344;color:white;font-weight:bold;font-size:30px;
+		text-align:center;padding:10px
+        }
+        .content{
+            width:280px;padding:10px;margin:10px;background-color:white;
+		    display:inline-block;vertical-align:top;
+		    text-align:center;height:150px;line-height:30px
+        }
+        p{
+            text-align:left;font-family:"標楷體"
+        }
+        span{
+            font-weight: bold;
+        }
     </style>
 </head>
-<body>
-    <div>
-        <h2>小工具展示</h2>
+<body style="margin:0px;background-color:#eeeeee;">
+
+    <div class="title">小工具展示</div>
+    <div class="block">
+        <div class="content">
+            <a href="/calendar">日期計算器</a>
+            <hr>
+            <p><span>簡介:</span>計算兩個日期差，或加減特定天數之日期為何</p>
+        </div>
+        <div class="content">
+            <a href="/clock">計時器</a>
+            <hr>
+            <p><span>簡介:</span>功能與碼表一樣，能夠計算累積時間</p>
+        </div>
+        <div class="content">
+            <a href="/dice">擲骰子</a>
+            <hr>
+            <p><span>簡介:</span>可以選擇骰子數並擲出</p>
+        </div>
+        <div class="content">
+            <a href="/flow_time_calculate">注滿時間計算</a>
+            <hr>
+            <p><span>簡介:</span>用出水量，計算容器注滿水之時間</p>
+        </div>
+        <div class="content">
+            <a href="/multi_clock">多工計時器</a>
+            <hr>
+            <p><span>簡介:</span>功能與碼表一樣，能夠計算累積時間，並可以依使用者需求新增所需之數量</p>
+        </div>
+        <div class="content">
+            <a href="/random_number">隨機數字產生器</a>
+            <hr>
+            <p><span>簡介:</span>隨機產生特定範圍之數字</p>
+        </div>
+        <div class="content">
+            <a href="/unit_tran">單位轉換</a>
+            <hr>
+            <p><span>簡介:</span>進行單位轉換</p>
+        </div>
+        <div class="content">
+            <a href="/OCR">OCR</a>
+            <hr>
+            <p><span>簡介:</span>使用tesseract.js進行文字辨識</p>
+        </div>
     </div>
-    <div>
-        <input type ="button" onclick="javascript:location.href='/calendar' "value="日期計算器"></input>
-        <input type ="button" onclick="javascript:location.href='/clock' "value="計時器"></input>
-        <input type ="button" onclick="javascript:location.href='/dice' "value="擲骰子"></input>
-        <input type ="button" onclick="javascript:location.href='/flow_time_calculate' "value="注滿時間計算"></input>
-        <input type ="button" onclick="javascript:location.href='/multi_clock' "value="多工計時器"></input>
-        <input type ="button" onclick="javascript:location.href='/random_number' "value="隨機數字產生器"></input>
-        <input type ="button" onclick="javascript:location.href='/unit_tran' "value="單位轉換"></input>
-        
-    </div>
+    
 </body>
 </html>
